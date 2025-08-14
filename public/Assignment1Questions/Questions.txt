@@ -1,0 +1,9 @@
+1.Develop a comparative analysis between a RESTful API and a GraphQL API for a given dataset.
+
+2.Emphasize how GraphQL addresses common issues like over-fetching and under-fetching of data.Provide measurable metrics or 
+showcasing the benefits of using GraphQL in terms of data efficiency.
+
+3.Write a series of GraphQL queries to retrieve specific fields from a sample schema. Include queries for nested objects and fields with arguments.
+
+4.Create a simple GraphQL schema using SDL for a blogging platform.Define types for users, posts, and comments, along with appropriate relationships.
+include queries for fetching user details, posts, and comments.

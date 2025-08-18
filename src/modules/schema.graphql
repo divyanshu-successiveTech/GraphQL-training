@@ -9,8 +9,23 @@ type Query{
 
     comments: [Comment!]!
     comment(id: ID!): Comment
+
+    UserById(id:ID!):UserResult
+
+    paginatedPosts(page: Int!, pageSize: Int!, sortBy: PostSortField = CREATED_AT, sortOrder: SortOrder = DESC): PaginatedPosts!
+
     }
+
+    
 
 type Mutation{
     postMessage(content:String!,author:String!):Message!
+
+    updateUser(id: ID!, name: String, email: String): User
+  
+    deleteComment(id: ID!): Comment
+
+    addPost(title: String!, content: String!, authorId: ID!): Post
+    
+    addComment(content: String!, authorId: ID!, postId: ID!): Comment
 }

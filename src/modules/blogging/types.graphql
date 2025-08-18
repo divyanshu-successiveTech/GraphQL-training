@@ -10,8 +10,19 @@ type Post {
   id: ID!
   title: String!
   content: String!
-  author: User!
+  authorId: User!
   comments: [Comment!]!
+  createdAt: String!
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+enum PostSortField {
+  CREATED_AT
+  TITLE
 }
 
 type Comment {
@@ -20,3 +31,9 @@ type Comment {
   author: User!
   post: Post!
 }
+
+type PaginatedPosts {
+  items: [Post!]!
+  totalCount: Int!
+}
+

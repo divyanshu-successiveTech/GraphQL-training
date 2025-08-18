@@ -1,0 +1,14 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+
+
+type Error {
+  message: String!
+  code: String!
+}
+
+union UserResult = User | Error
+

@@ -1,5 +1,5 @@
-import { blogMutationResolver } from "./mutation";
-import { blogQueryResolvers } from "./query";
+import { blogMutationResolver } from "./mutation.js";
+import { blogQueryResolvers } from "./query.js";
 
 
 export const bloggingModule = {

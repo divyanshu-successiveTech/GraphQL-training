@@ -5,6 +5,7 @@ export let messages = [
     author: "System",
     createdAt: new Date().toISOString(),
     title: "GraphQL API Introduction",
+    comment:["A","B"]
   },
   {
     id: "2",
@@ -12,5 +13,6 @@ export let messages = [
     author: "System",
     createdAt: new Date().toISOString(),
     title: "Query and Mutation Ready",
+    comment: ["C","D"]
   },
 ];

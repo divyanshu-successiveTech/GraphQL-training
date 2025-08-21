@@ -3,4 +3,5 @@ type Message {
   content: String!
   author: String!
   createdAt: String!
+  comments:[String!]!
 }

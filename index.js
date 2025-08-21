@@ -1,5 +1,7 @@
 import { createApolloServer } from "./src/server/express.js";
+import { connectDB } from "./src/config/db.js";
 
+await connectDB();
 const httpServer = await createApolloServer();
 
 httpServer.listen(4000, () => {

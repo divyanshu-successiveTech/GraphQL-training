@@ -1,0 +1,7 @@
+1. Integrate Apollo Server with a database. Modify the resolvers to interact with the database to fetch and update data.
+
+2. Add a user authentication system to the GraphQL API using Apollo Server. Implement a mutation for user login, generating and validating authentication tokens. 
+Explore different authentication strategies (e.g., JWT, OAuth)
+
+3. Implement role-based access control for certain GraphQL operations.Define roles such as "USER" and "ADMIN" and 
+restrict access to specific mutations based on user roles.

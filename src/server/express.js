@@ -15,6 +15,7 @@ import { pubsub } from "./pubsub.js"; // Import the pubsub instance
 import { typeDefs } from "../schema/typeDefs.js";
 import { resolvers } from "../schema/resolvers.js";
 import tokenBlacklist from "./blacklist.js";
+import { ChatUser } from "../modules/chat/models/ChatUser.js";
 
 import jwt from 'jsonwebtoken'
 
@@ -47,20 +48,25 @@ export async function createExpressServer() {
     expressMiddleware(server, {
   context: async ({ req }) => {
   const auth = req.headers.authorization || "";
-  let token =""
+  let token = "";
   let user = null;
-  if (auth.startsWith("Bearer " )) {
-   token = auth.split(" ")[1]
+
+  if (auth.startsWith("Bearer ")) {
+    token = auth.split(" ")[1];
   }
-    try {
-      if(token && !tokenBlacklist.has(token)){
-        user = jwt.verify(token, SECRET_KEY);
-      }
-      
-    } catch (err) {
-      console.log("JWT verify error:", err.message);
+
+  try {
+    if (token && !tokenBlacklist.has(token)) {
+      const decoded = jwt.verify(token, SECRET_KEY);
+      // Fetch full user document from DB by ID, including the role
+      user = await ChatUser.findById(decoded.id);
+      console.log("User from DB:", user);
     }
-  return { pubsub, user ,blackList:tokenBlacklist ,token};
+  } catch (err) {
+    console.log("JWT verify error:", err.message);
+  }
+
+  return { pubsub, user, blackList: tokenBlacklist, token };
 }
     })
   );

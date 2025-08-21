@@ -14,12 +14,17 @@ type Query{
 
     paginatedPosts(page: Int!, pageSize: Int!, sortBy: PostSortField = CREATED_AT, sortOrder: SortOrder = DESC): PaginatedPosts!
 
+    chatMessages: [ChatMessage!]!
+    chatUsers: [ChatUser!]!
+
+    AllMessages: [ChatMessage!]!
+
     }
 
     
 
 type Mutation{
-    postMessage(content:String!,author:String!):Message!
+    postMessage(content:String!,author:String!,comments:[String!]):Message!
 
     updateUser(id: ID!, name: String, email: String): User
   
@@ -28,4 +33,19 @@ type Mutation{
     addPost(title: String!, content: String!, authorId: ID!): Post
     
     addComment(content: String!, authorId: ID!, postId: ID!): Comment
+
+    register(username: String!, password: String!): User!
+
+    login(username: String!, password: String!): AuthPayload!
+
+    logout:ChatUser!
+    
+    sendMessage(content: String!): ChatMessage!
+}
+
+type Subscription{
+ messagePosted: Message!
+ addComment: Comment!
+ userStatus: ChatUser
+
 }

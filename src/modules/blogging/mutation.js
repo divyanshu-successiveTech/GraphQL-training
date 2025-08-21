@@ -44,7 +44,7 @@ export const blogMutationResolver = {
     return newPost;
   },
 
-  addComment: (_, { content, authorId, postId }) => {
+  addComment: (_, { content, authorId, postId },{pubsub}) => {
     const authorExists = users.some((user) => user.id === authorId);
     const postExists = posts.some((post) => post.id === postId);
     if (!authorExists) return ("Author not found")
@@ -58,6 +58,9 @@ export const blogMutationResolver = {
     };
 
     comments.push(newComment);
+
+    pubsub.publish("NEW_COMMENT_CREATED", { addComment: newComment }); 
+
     return newComment;
   },
 

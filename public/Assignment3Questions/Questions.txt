@@ -1,0 +1,9 @@
+1. Integrate a WebSocket library (e.g., subscriptions-transport-ws) into your GraphQL server.  Configure WebSocket connections to work seamlessly with GraphQL subscriptions.
+
+2.Extend the existing GraphQL schema to include a subscription for new comments.Implement the corresponding resolver to handle real-time updates when new comments are added.
+
+3.Extend the GraphQL schema to include types like User and Message for the chat application.Implement mutations to send messages and handle user authentication.
+
+4.Extend the existing GraphQL schema to include user presence information.Implement subscriptions to notify clients about users joining or leaving the chat.
+
+5.Extend the GraphQL schema to include a query for fetching message history.Implement a resolver to handle requests for retrieving message history.

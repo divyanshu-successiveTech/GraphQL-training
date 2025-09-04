@@ -1,77 +1,97 @@
 import jwt from "jsonwebtoken";
-import {users,messages} from "./dataSource.js"
+import { ChatUser } from "./models/ChatUser.js";
+import { ChatMessage } from "./models/ChatMessage.js";
 
 const SECRET_KEY = "ASDFG";
 
 export const AllMessages =[];
 
 export const chatMutationResolver = {
-    register: (_, { username, password }) => {
-        const existing = users.find(u => u.username === username);
-        if (existing) return ("Username already exists");
+    register: async (_, { username, password ,role}) => {
+        const existingUser = await ChatUser.findOne({ username });
+        if (existingUser) {
+            throw new Error("Username already exists");
+        }
 
-        const user = {
-            id: `${users.length + 1}`,
+        const newUser = new ChatUser({
             username,
             password, 
-        };
+            status: "Offline",
+            role
+        });
 
-        users.push(user);
-        return user;
+        await newUser.save();
+
+        return newUser;
     },
 
-    login: (_, { username, password },{pubsub}) => {
-        const user = users.find(u => u.username === username);
-        if (!user) return ("User not found");
+
+    login: async (_, { username, password }, { pubsub }) => {
+        const user = await ChatUser.findOne({ username });
+        if (!user) {
+            throw new Error("User not found");
+        }
 
         if (user.password !== password) {
-            return ("Invalid password");
+            throw new Error("Invalid password");
         }
+
         user.status = "Online";
+        await user.save();
 
         const token = jwt.sign(
-            { id: user.id, username: user.username },
+            { id: user._id, username: user.username },
             SECRET_KEY
         );
 
-        pubsub.publish("USER_ONLINE", { userStatus : user }); 
+        pubsub.publish("USER_ONLINE", { userStatus: user });
 
         return { token, user };
     },
+
     logout: async (_, __, context) => {
-        const { user, pubsub , blackList,token } = context;
+        const { user, pubsub, blackList, token } = context;
 
         if (!user) {
             throw new Error("No User found");
         }
+        const reqUser = await ChatUser.findById(user.id);
+        if (!reqUser) {
+            throw new Error("User not found in database");
+        }
 
-        user.status = "Offline"
+        reqUser.status = "Offline";
+        await reqUser.save();
 
-        pubsub.publish("USER_OFFLINE",{userStatus : user})
+        pubsub.publish("USER_OFFLINE", { userStatus: reqUser });
 
         blackList.add(token);
 
-    
-        return user;
+        return reqUser;
     },
 
-    sendMessage: (_, { content },context) => {
+
+    
+    sendMessage: async (_, { content }, context) => {
         const user = context.user;
-        
+
         if (!user) throw new Error("Unauthorized");
         if (!content) throw new Error("Message content required");
 
-
-        const message = {
-            id: `${messages.length + 1}`,
+        const message = new ChatMessage({
             content,
             timestamp: new Date().toISOString(),
-            sender: { id: user.id, username: user.username },
-        };
+            sender: user._id, 
+        });
+        console.log('user._id:', user._id);
 
-        AllMessages.push(message)
-        messages.push(message);
-        return message;
+
+        await message.save();
+        const msg = await ChatMessage.findById(message._id).populate('sender');
+        await message.populate("sender");
+        AllMessages.push(message);
+
+        return msg;
     }
 
 }
